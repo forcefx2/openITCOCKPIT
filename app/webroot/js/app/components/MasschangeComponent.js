@@ -23,19 +23,28 @@
 //	confirmation.
 
 App.Components.MasschangeComponent = Frontend.Component.extend({
+
 	massCount: 0,
 	controller: '',
 	group: '',
 	checkboxattr: 'hostname',
 	useDeleteMessage: true,
 	extendUrl: '',
-	
+
 	storeUuidsAsArray: false,
 	uuidsArray: [],
-	
+
 	selectedIds: [],
 	selectedUuids: [],
-	
+
+    selectedDTServiceIds: [],
+    selectedDTUuids: [],
+    selectedDTHistoryUuids: [],
+
+    downtimeServicesId: [],
+	internalDowntimeId: [],
+	downtimehistoryId: [],
+
 	setup: function(conf){
 		conf = conf || {};
 		conf.controller = conf.controller || '';
@@ -64,7 +73,19 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
 			});
 			self.showCount();
 		});
-		
+
+        $('#selectAllDowntimes').click(function(){
+            self.downtimeServicesId = [];
+            self.internalDowntimeId = [];
+            self.downtimehistoryId = [];
+            $('.massChangeDT').each(function(intIndex, checkboxObject){
+                $(checkboxObject).prop('checked', true);
+                self.addDTSelection($(checkboxObject).attr('downtimeServicesId'), $(checkboxObject).attr('internalDowntimeId'), $(checkboxObject).attr('downtimehistoryId'));
+            });
+            self.showCountDowntimes();
+        });
+
+
 		/*
 		 * Bind "Undo selection"
 		 */
@@ -75,7 +96,14 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
 			self.uuidsArray = [];
 			self.showCount();
 		});
-		
+        $('#untickAllDowntimes').click(function(){
+            $('.massChangeDT').prop('checked', null);
+            self.selectedDTServiceIds = [];
+            self.selectedDTUuids = [];
+            self.selectedDTHistoryUuids = [];
+            self.showCountDowntimes();
+        });
+
 		/*
 		 * Check if there are some picked select boxes, browsers like firefox check them on page reload for example
 		 */
@@ -88,7 +116,14 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
 			}
 		});
 		self.showCount();
-		
+
+        $('.massChangeDT').each(function(intIndex, checkboxObject){
+            if($(checkboxObject).prop('checked') == true){
+                self.addDTSelection($(checkboxObject).attr('downtimeServicesId'), $(checkboxObject).attr('internalDowntimeId'), $(checkboxObject).attr('downtimehistoryId'));
+            }
+        });
+        self.showCountDowntimes();
+
 		/*
 		 * Bind change event
 		 */
@@ -102,35 +137,68 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
 			}else{
 				self.removeSelection($clickedObject.val(), $clickedObject.attr('uuid'));
 			}
-			
+
 			self.showCount();
 		});
-		
+
+        $('.massChangeDT').change(function(){
+            var $clickedObject = $(this);
+            if($clickedObject.prop('checked') == true){
+                self.addDTSelection($clickedObject.attr('downtimeServicesId'), $clickedObject.attr('internalDowntimeId'), $clickedObject.attr('downtimehistoryId'));
+            }else{
+                self.removeDTSelection($clickedObject.attr('downtimeServicesId'), $clickedObject.attr('internalDowntimeId'), $clickedObject.attr('downtimehistoryId'));
+            }
+            self.showCountDowntimes();
+        });
+
 	},
-	
+
 	addSelection: function(id, uuid){
 		this.selectedIds.push(id);
 		this.selectedUuids.push(uuid);
 	},
-	
+
+    addDTSelection: function(dtsid, dtuuid, dthistuuid){
+        this.selectedDTServiceIds.push(dtsid);
+        this.selectedDTUuids.push(dtuuid);
+        this.selectedDTHistoryUuids.push(dthistuuid);
+    },
+
 	removeSelection: function(id, uuid){
 		var index = this.selectedIds.indexOf(id);
 		if(index != -1){
 			this.selectedIds.splice(index, 1);
 		}
-		
+
 		var index = this.selectedUuids.indexOf(uuid);
 		if(index != -1){
 			this.selectedUuids.splice(index, 1);
 		}
-		
+
 		if(this.storeUuidsAsArray == true){
 			if(typeof this.uuidsArray[uuid] != 'undefined'){
 				delete this.uuidsArray[uuid];
 			}
 		}
 	},
-	
+
+    removeDTSelection: function(dtsid, dtuuid, dthistuuid){
+        var index = this.selectedDTServiceIds.indexOf(dtsid);
+        if(index != -1){
+            this.selectedDTServiceIds.splice(index, 1);
+        }
+
+        var index = this.selectedDTUuids.indexOf(dtuuid);
+        if(index != -1){
+            this.selectedDTUuids.splice(index, 1);
+        }
+
+        var index = this.selectedDTHistoryUuids.indexOf(dthistuuid);
+        if(index != -1){
+            this.selectedDTHistoryUuids.splice(index, 1);
+        }
+    },
+
 	showCount: function(){
 		if(this.selectedIds.length > 0){
 			$('#selectionCount').html('(' + this.selectedIds.length + ')');
@@ -143,13 +211,28 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
 		this.createDisableAllHref();
 		this.createAppendGroupAllHref();
 	},
-	
+
+    showCountDowntimes: function(){
+        if(this.selectedDTUuids.length > 0){
+            $('#selectionCount').html('(' + this.selectedDTUuids.length + ')');
+        }else{
+            $('#selectionCount').html('');
+        }
+        this.createDeleteAllHref();
+        this.createEditDetailAllHref();
+        this.createCopyAllHref();
+        this.createDisableAllHref();
+        this.createAppendGroupAllHref();
+    },
+
 	createDeleteAllHref: function(){
-		if(this.selectedIds.length > 0){
+		if(this.selectedIds.length > 0 || this.selectedDTUuids.length > 0){
 			if(this.useDeleteMessage === true){
 				var hostnames = this.fetchHostnames();
 				var $yes = $('#message_yes');
 				var $no = $('#message_no');
+                var $cancel = $('#message_cancel');
+
 				$('#deleteAll').off('click').on('click', function(e){
 					SmartMSGboxCount = 0;
 					$.SmartMessageBox({
@@ -167,17 +250,47 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
 					}.bind(this));
 					//e.preventDefault();
 				}.bind(this));
+                $('#deleteAllDowntimes').off('click').on('click', function(e){
+                    SmartMSGboxCount = 0;
+                    $.SmartMessageBox({
+                        title : "<span class='text-danger'>"+$('#delete_message_h1').val()+"</span>",
+                        sound: false,
+                        sound_on: false,
+                        content : $('#delete_message_h2').val()+hostnames,
+                        buttons : '['+$cancel.val()+']['+$no.val()+']['+$yes.val()+']'
+                    }, function(ButtonPressed) {
+                        if (ButtonPressed === $yes.val()) {
+							//console.log(this.selectedDTServiceIds[0]);
+                        	var i=0;
+                        	while(i<this.selectedDTServiceIds.length){
+                                self.WebsocketSudo.send(self.WebsocketSudo.toJson('submitDeleteHostDowntime', [this.selectedDTUuids[i], this.selectedDTServiceIds[i]]));
+                                self.Externalcommand.refresh(); //its easier to configure websocketSudo in this file as an redirect and url parsing(hosts/services)
+								//console.log(this.selectedDTServiceIds[i]);
+                                //console.log(this.selectedDTUuids[i]);
+                                i=i+1;
+                            }
+                            //window.location = '/'+this.controller+'/mass_delete/'+this.selectedDTUuids.join('/')+'services/'+this.selectedDTServiceIds.join('/')+this.extendUrl;
+
+                        } else if (ButtonPressed === $no.val()) {
+                            self.WebsocketSudo.send(self.WebsocketSudo.toJson('submitDeleteHostDowntime', [this.selectedDTUuids[0]]));
+                            self.Externalcommand.refresh();
+                        } else {
+                            $('#MsgBoxBack').fadeOut();
+                        }
+                    }.bind(this));
+                    //e.preventDefault();
+                }.bind(this));
 			}else{
 				$('#deleteAll').attr('href', '/'+this.controller+'/mass_delete/'+this.selectedIds.join('/')+this.extendUrl);
 			}
 
-			
+
 		}else{
 			$('#deleteAll').attr('href', 'javascript:void(0);');
 			$('#deleteAll').unbind('click');
 		}
 	},
-	
+
 	createDisableAllHref: function(){
 		if(this.selectedIds.length > 0){
 			var hostnames = this.fetchHostnames();
@@ -197,16 +310,16 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
 						$('#MsgBoxBack').fadeOut();
 					}
 				}.bind(this));
-				
+
 				//e.preventDefault();
 			}.bind(this));
-			
+
 		}else{
 			$('#disableAll').attr('href', 'javascript:void(0);');
 			$('#disableAll').unbind('click');
 		}
 	},
-	
+
 	createCopyAllHref: function(){
 		if(this.selectedIds.length > 0){
 			$('#copyAll').attr('href', '/'+this.controller+'/copy/'+this.selectedIds.join('/')+this.extendUrl);
@@ -225,7 +338,7 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
 			});
 		}
 	},
-	
+
 	createAppendGroupAllHref: function(){
 		if(this.selectedIds.length > 0){
 			$('#addToGroupAll').attr('href', '/'+this.group+'/mass_add/'+this.selectedIds.join('/')+this.extendUrl);
@@ -233,7 +346,7 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
 			$('#addToGroupAll').attr('href', 'javascript:void(0);');
 		}
 	},
-	
+
 	createEditDetailAllHref: function(){
 		if(this.selectedIds.length > 0){
 			$('#editDetailAll').attr('href', '/'+this.controller+'/edit_details/'+this.selectedIds.join('/')+this.extendUrl);
@@ -241,7 +354,7 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
 			$('#editDetailAll').attr('href', 'javascript:void(0);');
 		}
 	},
-	
+
 	fetchHostnames: function(){
 		var html = '<br />';
 		$('.massChange').each(function(intIndex, checkboxObject){

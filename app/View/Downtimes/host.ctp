@@ -279,6 +279,7 @@
                                 <thead>
                                 <tr>
                                     <?php $order = $this->Paginator->param('order'); ?>
+                                    <th class="no-sort text-center"><i class="fa fa-check-square-o fa-lg"></i></th>
                                     <th class="no-sort"><?php echo __('Running'); ?></th>
                                     <th class="no-sort"><?php echo $this->Utils->getDirection($order, 'Host.name');
                                         echo $this->Paginator->sort('Host.name', __('Host')); ?></th>
@@ -302,6 +303,12 @@
                                 <tbody>
                                 <?php foreach ($all_downtimes as $downtime): ?>
                                     <tr>
+                                        <td class="text-center width-5">
+                                            <input type="checkbox" class="massChangeDT"
+                                                   downtimeServicesId="<?php echo $downtime['servicesDown'] ?>"
+                                                   internalDowntimeId="<?php echo h($downtime['Downtime']['internal_downtime_id']); ?>"
+                                                   downtimehistoryId="<?php echo h($downtime['Downtime']['downtimehistory_id']); ?>">
+                                        </td>
                                         <td class="text-center"><?php echo $this->Monitoring->isDowntimeRunning($downtime['Downtime']['was_started'], $downtime['Downtime']['scheduled_end_time'], $downtime['Downtime']['was_cancelled'])['html']; ?></td>
                                         <td>
                                             <?php
@@ -355,6 +362,8 @@
                                 </center>
                             </div>
                         <?php endif; ?>
+
+                        <?php echo $this->element('downtimes_mass_delete'); ?>
 
                         <div style="padding: 5px 10px;">
                             <div class="row">
