@@ -23,7 +23,7 @@
 //	License agreement and license key will be shipped with the order
 //	confirmation.
 ?>
-<?php $this->Paginator->options(['url' => Hash::merge($this->params['named'], $this->params['pass'], ['Listsettings' => $DowntimeListsettings])]); ?>
+<?php $this->Paginator->options(['url' => Hash::merge($this->params['named'],$this->params['pass'],['Listsettings' => $DowntimeListsettings])]); ?>
 <div class="row">
     <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
         <h1 class="page-title txt-color-blueDark">
@@ -55,27 +55,27 @@
                                         class="fa fa-caret-down"></i>
                             </button>
                             <ul class="dropdown-menu pull-right">
-                                <?php if ($this->Acl->hasPermission('addHostdowntime', 'systemdowntimes')): ?>
+                                <?php if ($this->Acl->hasPermission('addHostdowntime','systemdowntimes')): ?>
                                     <li>
-                                        <a href="<?php echo Router::url(['controller' => 'systemdowntimes', 'action' => 'addHostdowntime']); ?>"><?php echo __('Create host downtime'); ?></a>
+                                        <a href="<?php echo Router::url(['controller' => 'systemdowntimes','action' => 'addHostdowntime']); ?>"><?php echo __('Create host downtime'); ?></a>
                                     </li>
                                 <?php endif; ?>
-                                <?php if ($this->Acl->hasPermission('addHostdowntime', 'systemdowntimes')): ?>
+                                <?php if ($this->Acl->hasPermission('addHostdowntime','systemdowntimes')): ?>
                                     <li>
-                                        <a href="<?php echo Router::url(['controller' => 'systemdowntimes', 'action' => 'addHostgroupdowntime']); ?>"><?php echo __('Create hostgroup downtime'); ?></a>
+                                        <a href="<?php echo Router::url(['controller' => 'systemdowntimes','action' => 'addHostgroupdowntime']); ?>"><?php echo __('Create hostgroup downtime'); ?></a>
                                     </li>
                                 <?php endif; ?>
-                                <?php if ($this->Acl->hasPermission('addServicedowntime', 'systemdowntimes')): ?>
+                                <?php if ($this->Acl->hasPermission('addServicedowntime','systemdowntimes')): ?>
                                     <li>
-                                        <a href="<?php echo Router::url(['controller' => 'systemdowntimes', 'action' => 'addServicedowntime']); ?>"><?php echo __('Create service downtime'); ?></a>
+                                        <a href="<?php echo Router::url(['controller' => 'systemdowntimes','action' => 'addServicedowntime']); ?>"><?php echo __('Create service downtime'); ?></a>
                                     </li>
                                 <?php endif; ?>
                             </ul>
                         </div>
-                        <?php echo $this->Html->link(__('Filter'), 'javascript:', ['class' => 'oitc-list-filter btn btn-xs btn-primary toggle', 'hide-on-render' => 'true', 'icon' => 'fa fa-filter']); ?>
+                        <?php echo $this->Html->link(__('Filter'),'javascript:',['class' => 'oitc-list-filter btn btn-xs btn-primary toggle','hide-on-render' => 'true','icon' => 'fa fa-filter']); ?>
                         <?php
                         if ($isFilter):
-                            echo $this->ListFilter->resetLink(null, ['class' => 'btn-danger btn-xs', 'icon' => 'fa fa-times']);
+                            echo $this->ListFilter->resetLink(null,['class' => 'btn-danger btn-xs','icon' => 'fa fa-times']);
                         endif;
                         ?>
                     </div>
@@ -116,7 +116,7 @@
 
                     <div id="switch-1" class="widget-toolbar" role="menu">
                         <?php
-                        echo $this->Form->create('downtimes', [
+                        echo $this->Form->create('downtimes',[
                             'class' => 'form-horizontal clear',
                             'url'   => 'service' //reset the URL on submit
                         ]);
@@ -144,19 +144,19 @@
                                         class="fa fa-caret-down"></i>
                             </button>
                             <ul class="dropdown-menu pull-right">
-                                <?php if ($this->Acl->hasPermission('host', 'downtimes')): ?>
+                                <?php if ($this->Acl->hasPermission('host','downtimes')): ?>
                                     <li>
-                                        <a href="<?php echo Router::url(['controller' => 'downtimes', 'action' => 'host']); ?>"><?php echo __('Host downtimes'); ?></a>
+                                        <a href="<?php echo Router::url(['controller' => 'downtimes','action' => 'host']); ?>"><?php echo __('Host downtimes'); ?></a>
                                     </li>
                                 <?php endif; ?>
-                                <?php if ($this->Acl->hasPermission('service', 'downtimes')): ?>
+                                <?php if ($this->Acl->hasPermission('service','downtimes')): ?>
                                     <li>
-                                        <a href="<?php echo Router::url(['controller' => 'downtimes', 'action' => 'service']); ?>"><?php echo __('Service downtimes'); ?></a>
+                                        <a href="<?php echo Router::url(['controller' => 'downtimes','action' => 'service']); ?>"><?php echo __('Service downtimes'); ?></a>
                                     </li>
                                 <?php endif; ?>
-                                <?php if ($this->Acl->hasPermission('index', 'systemdowntimes')): ?>
+                                <?php if ($this->Acl->hasPermission('index','systemdowntimes')): ?>
                                     <li>
-                                        <a href="<?php echo Router::url(['controller' => 'systemdowntimes', 'action' => 'index']); ?>"><?php echo __('Recurring downtimes'); ?></a>
+                                        <a href="<?php echo Router::url(['controller' => 'systemdowntimes','action' => 'index']); ?>"><?php echo __('Recurring downtimes'); ?></a>
                                     </li>
                                 <?php endif; ?>
                             </ul>
@@ -273,43 +273,54 @@
                 </header>
                 <div>
                     <div class="widget-body no-padding">
-                        <?php echo $this->ListFilter->renderFilterbox($filters, ['formActionParams' => ['url' => Router::url(Hash::merge($this->params['named'], $this->params['pass'], ['Listsettings' => $DowntimeListsettings])), 'merge' => false]], '<i class="fa fa-filter"></i> '.__('Filter'), false, false); ?>
+                        <?php echo $this->ListFilter->renderFilterbox($filters,['formActionParams' => ['url' => Router::url(Hash::merge($this->params['named'],$this->params['pass'],['Listsettings' => $DowntimeListsettings])),'merge' => false]],'<i class="fa fa-filter"></i> ' . __('Filter'),false,false); ?>
                         <div class="mobile_table">
-                            <table id="servicedowntimes_list" class="table table-striped table-hover table-bordered smart-form"
+                            <table id="servicedowntimes_list"
+                                   class="table table-striped table-hover table-bordered smart-form"
                                    style="">
                                 <thead>
                                 <tr>
                                     <?php $order = $this->Paginator->param('order'); ?>
+                                    <th class="no-sort text-center"><i class="fa fa-check-square-o fa-lg"></i></th>
                                     <th class="no-sort"><?php echo __('Running'); ?></th>
-                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order, 'Host.name');
-                                        echo $this->Paginator->sort('Host.name', __('Host')); ?></th>
-                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order, 'Service.name');
-                                        echo $this->Paginator->sort('Service.name', __('Service')); ?></th>
-                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order, 'Downtime.author_name');
-                                        echo $this->Paginator->sort('Downtime.author_name', __('User')); ?></th>
-                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order, 'Downtime.comment_data');
-                                        echo $this->Paginator->sort('Downtime.comment_data', __('Comment')); ?></th>
-                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order, 'Downtime.entry_time');
-                                        echo $this->Paginator->sort('Downtime.entry_time', __('Created')); ?></th>
-                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order, 'Downtime.scheduled_start_time');
-                                        echo $this->Paginator->sort('Downtime.scheduled_start_time', __('Start')); ?></th>
-                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order, 'Downtime.scheduled_end_time');
-                                        echo $this->Paginator->sort('Downtime.scheduled_end_time', __('End')); ?></th>
-                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order, 'Downtime.duration');
-                                        echo $this->Paginator->sort('Downtime.duration', __('Duration')); ?></th>
-                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order, 'Downtime.was_cancelled');
-                                        echo $this->Paginator->sort('Downtime.was_cancelled', __('Was cancelled')); ?></th>
+                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order,'Host.name');
+                                        echo $this->Paginator->sort('Host.name',__('Host')); ?></th>
+                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order,'Service.name');
+                                        echo $this->Paginator->sort('Service.name',__('Service')); ?></th>
+                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order,'Downtime.author_name');
+                                        echo $this->Paginator->sort('Downtime.author_name',__('User')); ?></th>
+                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order,'Downtime.comment_data');
+                                        echo $this->Paginator->sort('Downtime.comment_data',__('Comment')); ?></th>
+                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order,'Downtime.entry_time');
+                                        echo $this->Paginator->sort('Downtime.entry_time',__('Created')); ?></th>
+                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order,'Downtime.scheduled_start_time');
+                                        echo $this->Paginator->sort('Downtime.scheduled_start_time',__('Start')); ?></th>
+                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order,'Downtime.scheduled_end_time');
+                                        echo $this->Paginator->sort('Downtime.scheduled_end_time',__('End')); ?></th>
+                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order,'Downtime.duration');
+                                        echo $this->Paginator->sort('Downtime.duration',__('Duration')); ?></th>
+                                    <th class="no-sort"><?php echo $this->Utils->getDirection($order,'Downtime.was_cancelled');
+                                        echo $this->Paginator->sort('Downtime.was_cancelled',__('Was cancelled')); ?></th>
                                     <th class="no-sort"><?php echo __('Delete'); ?></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php foreach ($all_downtimes as $downtime): ?>
                                     <tr>
-                                        <td class="text-center"><?php echo $this->Monitoring->isDowntimeRunning($downtime['Downtime']['was_started'], $downtime['Downtime']['scheduled_end_time'], $downtime['Downtime']['was_cancelled'])['html']; ?></td>
+                                        <td class="text-center width-5">
+                                            <?php if ($this->Monitoring->isDowntimeRunning($downtime['Downtime']['was_started'],$downtime['Downtime']['scheduled_end_time'],$downtime['Downtime']['was_cancelled'])['value'] == "1" && $this->Acl->hasPermission('delete','downtimes') && $downtime['canDelete']): ?>
+                                                <input type="checkbox" class="massChangeDT"
+                                                       downtimeServicesId=""
+                                                       internalDowntimeId="<?php echo h($downtime['Downtime']['internal_downtime_id']); ?>"
+                                                       downtimehistoryId="<?php echo h($downtime['Downtime']['downtimehistory_id']); ?>"
+                                                >
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="text-center"><?php echo $this->Monitoring->isDowntimeRunning($downtime['Downtime']['was_started'],$downtime['Downtime']['scheduled_end_time'],$downtime['Downtime']['was_cancelled'])['html']; ?></td>
                                         <td>
                                             <?php
                                             if ($downtime['Host']['id'] != null): ?>
-                                                <?php if ($this->Acl->hasPermission('browser', 'hosts')): ?>
+                                                <?php if ($this->Acl->hasPermission('browser','hosts')): ?>
                                                     <a href="/Hosts/browser/<?php echo $downtime['Host']['id']; ?>"><?php echo $downtime['Host']['name']; ?></a>
                                                 <?php else: ?>
                                                     <?php echo h($downtime['Host']['name']); ?>
@@ -325,7 +336,7 @@
                                                 if ($serviceName === null || $serviceName === ''):
                                                     $serviceName = $downtime['Servicetemplate']['name'];
                                                 endif;
-                                                if ($this->Acl->hasPermission('browser', 'services')): ?>
+                                                if ($this->Acl->hasPermission('browser','services')): ?>
                                                     <a href="/services/browser/<?php echo $downtime['Service']['id']; ?>"><?php echo h($serviceName); ?></a>
                                                 <?php else: ?>
                                                     <?php echo h($serviceName); ?>
@@ -336,9 +347,9 @@
                                         </td>
                                         <td><?php echo $downtime['Downtime']['author_name']; ?></td>
                                         <td><?php echo $downtime['Downtime']['comment_data']; ?></td>
-                                        <td><?php echo $this->Time->format($downtime['Downtime']['entry_time'], $this->Auth->user('dateformat'), false, $this->Auth->user('timezone')); ?></td>
-                                        <td><?php echo $this->Time->format($downtime['Downtime']['scheduled_start_time'], $this->Auth->user('dateformat'), false, $this->Auth->user('timezone')); ?></td>
-                                        <td><?php echo $this->Time->format($downtime['Downtime']['scheduled_end_time'], $this->Auth->user('dateformat'), false, $this->Auth->user('timezone')); ?></td>
+                                        <td><?php echo $this->Time->format($downtime['Downtime']['entry_time'],$this->Auth->user('dateformat'),false,$this->Auth->user('timezone')); ?></td>
+                                        <td><?php echo $this->Time->format($downtime['Downtime']['scheduled_start_time'],$this->Auth->user('dateformat'),false,$this->Auth->user('timezone')); ?></td>
+                                        <td><?php echo $this->Time->format($downtime['Downtime']['scheduled_end_time'],$this->Auth->user('dateformat'),false,$this->Auth->user('timezone')); ?></td>
                                         <td><?php echo $this->Utils->secondsInHuman($downtime['Downtime']['duration']); ?></td>
                                         <td>
                                             <?php
@@ -351,7 +362,7 @@
                                         </td>
                                         <td class="text-center">
                                             <?php if (strtotime($downtime['Downtime']['scheduled_end_time']) > time() && $downtime['Downtime']['was_cancelled'] == 0): ?>
-                                                <?php if ($this->Acl->hasPermission('delete', 'downtimes') && $downtime['canDelete']): ?>
+                                                <?php if ($this->Acl->hasPermission('delete','downtimes') && $downtime['canDelete']): ?>
                                                     <a class="btn btn-danger btn-xs delete_downtime"
                                                        href="javascript:void(0)"
                                                        internal-downtime-id="<?php echo h($downtime['Downtime']['internal_downtime_id']); ?>"
@@ -374,11 +385,17 @@
                             </div>
                         <?php endif; ?>
 
+                        <?php
+                        if ($this->Acl->hasPermission('delete','downtimes') && $downtime['canDelete']) {
+                            echo $this->element('downtimes_mass_service_delete');
+                        }
+                        ?>
+
                         <div style="padding: 5px 10px;">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="dataTables_info" style="line-height: 32px;"
-                                         id="datatable_fixed_column_info"><?php echo $this->Paginator->counter(__('Page').' {:page} '.__('of').' {:pages}, '.__('Total').' {:count} '.__('entries')); ?></div>
+                                         id="datatable_fixed_column_info"><?php echo $this->Paginator->counter(__('Page') . ' {:page} ' . __('of') . ' {:pages}, ' . __('Total') . ' {:count} ' . __('entries')); ?></div>
                                 </div>
                                 <div class="col-sm-6 text-right">
                                     <div class="dataTables_paginate paging_bootstrap">
