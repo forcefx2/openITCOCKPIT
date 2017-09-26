@@ -32,8 +32,9 @@
     <div class="col-xs-12 col-md-2"><span id="untickAllDowntimes" class="pointer"><i
                     class="fa fa-lg fa-square-o"></i> <?php echo __('Undo selection'); ?></span></div>
     <div class="col-xs-12 col-md-2">
-        <?php if ($this->Acl->hasPermission('delete', 'Services', '')): ?>
-            <a href="javascript:void(0);" id="deleteAllServiceDowntimes" class="txt-color-red" style="text-decoration: none;"> <i
+        <?php if ($this->Acl->hasPermission('delete','Services','')): ?>
+            <a href="javascript:void(0);" id="deleteAllServiceDowntimes" class="txt-color-red"
+               style="text-decoration: none;"> <i
                         class="fa fa-lg fa-trash-o"></i> <?php echo __('Delete'); ?></a>
         <?php endif; ?>
     </div>

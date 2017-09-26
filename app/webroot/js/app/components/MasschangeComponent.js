@@ -56,16 +56,13 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
 
 
         this.Controller.WebsocketSudo.setup(this.Controller.getVar('websocket_url'), this.Controller.getVar('akey'));
-
-        this.Controller.WebsocketSudo._errorCallback = function () {
+        this.Controller.WebsocketSudo._errorCallback = function (){
             $('#error_msg').html('<div class="alert alert-danger alert-block"><a href="#" data-dismiss="alert" class="close">×</a><h5 class="alert-heading"><i class="fa fa-warning"></i> Error</h5>Could not connect to SudoWebsocket Server</div>');
         }
-
         this.Controller.WebsocketSudo.connect();
         this.Controller.WebsocketSudo._success = function (e) {
             return true;
-        }.bind(this)
-
+        }.bind(this);
         this.Controller.WebsocketSudo._callback = function (transmitted) {
             return true;
         }.bind(this);
@@ -153,7 +150,6 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
 			}else{
 				self.removeSelection($clickedObject.val(), $clickedObject.attr('uuid'));
 			}
-
 			self.showCount();
 		});
 
@@ -176,8 +172,8 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
 
     addDTSelection: function(dtsid, dtuuid, dthistuuid){
         if(dtsid!="") this.selectedDTServiceIds.push(dtsid);
-        this.selectedDTUuids.push(dtuuid);
-        this.selectedDTHistoryUuids.push(dthistuuid);
+        if(dtuuid!="") this.selectedDTUuids.push(dtuuid);
+        if(dthistuuid!="") this.selectedDTHistoryUuids.push(dthistuuid);
     },
 
 	removeSelection: function(id, uuid){
@@ -234,21 +230,17 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
         }else{
             $('#selectionCount').html('');
         }
-        //console.log(this.selectedDTUuids);
         this.createDeleteAllHref();
     },
 
 	createDeleteAllHref: function(){
 
 		if(this.selectedIds.length > 0 || this.selectedDTUuids.length > 0){
-            //console.log(this.selectedDTUuids);
 			if(this.useDeleteMessage === true){
-				//var hostnames = this.fetchHostnames();
-				var hostnames = this.fetchDTHostnames();
+				var hostnames = this.fetchHostnames();
 				var $yes = $('#message_yes');
 				var $no = $('#message_no');
                 var $cancel = $('#message_cancel');
-
 
 				$('#deleteAll').off('click').on('click', function(e){
 					SmartMSGboxCount = 0;
@@ -268,6 +260,7 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
 					//e.preventDefault();
 				}.bind(this));
                 $('#deleteAllDowntimes').off('click').on('click', function(e){
+                    hostnames = this.fetchDTHostnames();
                     SmartMSGboxCount = 0;
                     $.SmartMessageBox({
                         title : "<span class='text-danger'>"+$('#delete_message_h1').val()+"</span>",
@@ -277,7 +270,6 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
                         buttons : '['+$cancel.val()+']['+$no.val()+']['+$yes.val()+']'
                     }, function(ButtonPressed) {
                         if (ButtonPressed === $yes.val()) {
-							//console.log(this.selectedDTServiceIds[0]);
                         	var i=0;
                         	while(i<this.selectedDTServiceIds.length){
                                 this.Controller.WebsocketSudo.send(this.Controller.WebsocketSudo.toJson('submitDeleteHostDowntime', [this.selectedDTUuids[i], this.selectedDTServiceIds[i]]));
@@ -300,19 +292,23 @@ App.Components.MasschangeComponent = Frontend.Component.extend({
                 $('#deleteAll').off('click').on('click', function(e){
                     $('#deleteAll').attr('href', '/' + this.controller + '/mass_delete/' + this.selectedIds.join('/') + this.extendUrl);
                 });
+                $('#deleteAllDowntimes').off('click').on('click', function(e){
+                    var i=0;
+                    while(i<this.selectedDTServiceIds.length){
+                        this.Controller.WebsocketSudo.send(this.Controller.WebsocketSudo.toJson('submitDeleteHostDowntime', [this.selectedDTUuids[i], this.selectedDTServiceIds[i]]));
+                        this.Controller.Externalcommand.refresh();
+                        i=i+1;
+                    }
+                }.bind(this));
                 $('#deleteAllServiceDowntimes').off('click').on('click', function(e){
                     var i=0;
-                    console.log(this.selectedDTUuids);
                     while(i<this.selectedDTUuids.length){
                         this.Controller.WebsocketSudo.send(this.Controller.WebsocketSudo.toJson('submitDeleteServiceDowntime', [this.selectedDTUuids[i]]));
                         this.Controller.Externalcommand.refresh();
                         i=i+1;
                     }
-                    //$('#deleteAllServiceDowntimes').attr('href', '/' + this.controller + '/service/' + this.extendUrl);
                 }.bind(this));
-
 			}
-
 		}else{
 			$('#deleteAll').attr('href', 'javascript:void(0);');
 			$('#deleteAll').unbind('click');

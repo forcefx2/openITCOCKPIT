@@ -25,25 +25,25 @@
 App.Controllers.DowntimesHostController = Frontend.AppController.extend({
     $table: null,
 
-    components: ['WebsocketSudo', 'Externalcommand', 'Ajaxloader','Masschange'],
+    components: ['WebsocketSudo', 'Externalcommand', 'Ajaxloader', 'Masschange'],
 
-    _initialize: function () {
+    _initialize: function(){
         var self = this;
         this.Masschange.setup({
             'controller': 'downtimes'
         });
-        $('.select_datatable').click(function () {
+        $('.select_datatable').click(function(){
             self.fnShowHide($(this).attr('my-column'), $(this).children());
         });
 
         var highestTime = 0, highestValue, pageUrl, dataTableValue, dataTableValueParsed;
-        for (var i = 0, len = localStorage.length; i < len; ++i) {
+        for(var i = 0, len = localStorage.length; i < len; ++i){
             pageUrl = localStorage.key(i);
             dataTableValue = localStorage.getItem(pageUrl);
-            if (typeof dataTableValue == 'undefined' || dataTableValue == 'undefined') continue;
+            if(typeof dataTableValue == 'undefined' || dataTableValue == 'undefined') continue;
             dataTableValueParsed = JSON.parse(dataTableValue);
-            if (pageUrl.indexOf('DataTables_hostdowntimes_list_/downtimes/host') !== -1) {
-                if (dataTableValueParsed.time > highestTime) {
+            if(pageUrl.indexOf('DataTables_hostdowntimes_list_/downtimes/host') !== -1){
+                if(dataTableValueParsed.time > highestTime){
                     highestTime = dataTableValueParsed.time;
                     highestValue = dataTableValue;
                 }
@@ -62,19 +62,19 @@ App.Controllers.DowntimesHostController = Frontend.AppController.extend({
                 "bSortable": false,
                 "aTargets": ["no-sort"]
             }],
-            "fnInitComplete": function (dtObject) {
+            "fnInitComplete": function(dtObject){
                 var vCols = [];
                 var $checkboxObjects = $('.select_datatable');
 
                 //Enable all checkboxes
                 $('.select_datatable').find('input').prop('checked', true);
 
-                $.each(dtObject.aoColumns, function (count) {
-                    if (dtObject.aoColumns[count].bVisible == false) {
+                $.each(dtObject.aoColumns, function(count){
+                    if(dtObject.aoColumns[count].bVisible == false){
                         //Uncheck checkboxes of hidden colums
-                        $checkboxObjects.each(function (intKey, object) {
+                        $checkboxObjects.each(function(intKey, object){
                             var $object = $(object);
-                            if ($object.attr('my-column') == count) {
+                            if($object.attr('my-column') == count){
                                 var $input = $(object).find('input');
                                 $input.prop('checked', false);
                             }
@@ -89,7 +89,7 @@ App.Controllers.DowntimesHostController = Frontend.AppController.extend({
         /*
          * Bind listoptions events
          */
-        $('.listoptions_action').click(function () {
+        $('.listoptions_action').click(function(){
             $this = $(this);
             // Set selected value in "fance selectbox"
             $($this.attr('selector')).html($this.html());
@@ -100,15 +100,15 @@ App.Controllers.DowntimesHostController = Frontend.AppController.extend({
         /*
          * Bind click evento to .listoptions_checkbox to make a `<a />` to a label
          */
-        $('.listoptions_checkbox').click(function (event) {
+        $('.listoptions_checkbox').click(function(event){
             $this = $(this);
-            if (event.target == event.currentTarget) {
+            if(event.target == event.currentTarget){
                 $checkbox = $this.find(':checkbox');
                 // Lets make t `<a />` to an 'label'
-                if ($checkbox.prop('checked') == true) {
+                if($checkbox.prop('checked') == true){
                     // Checkbox is enabled, so we need to remove the 'check'
                     $checkbox.prop('checked', false);
-                } else {
+                }else{
                     // Checkbox is disabled, so we set the 'check'
                     $checkbox.prop('checked', true);
                 }
@@ -121,16 +121,16 @@ App.Controllers.DowntimesHostController = Frontend.AppController.extend({
 
         this.WebsocketSudo.setup(this.getVar('websocket_url'), this.getVar('akey'));
 
-        this.WebsocketSudo._errorCallback = function () {
+        this.WebsocketSudo._errorCallback = function(){
             $('#error_msg').html('<div class="alert alert-danger alert-block"><a href="#" data-dismiss="alert" class="close">×</a><h5 class="alert-heading"><i class="fa fa-warning"></i> Error</h5>Could not connect to SudoWebsocket Server</div>');
         }
 
         this.WebsocketSudo.connect();
-        this.WebsocketSudo._success = function (e) {
+        this.WebsocketSudo._success = function(e){
             return true;
         }.bind(this)
 
-        this.WebsocketSudo._callback = function (transmitted) {
+        this.WebsocketSudo._callback = function(transmitted){
             return true;
         }.bind(this);
 
@@ -139,7 +139,7 @@ App.Controllers.DowntimesHostController = Frontend.AppController.extend({
         /*
          * Bind click event for delete downtime button
          */
-        $('.delete_downtime').click(function () {
+        $('.delete_downtime').click(function(){
             var $yes = $('#message_yes');
             var $no = $('#message_no');
             var $cancel = $('#message_cancel');
@@ -150,11 +150,11 @@ App.Controllers.DowntimesHostController = Frontend.AppController.extend({
                 sound_on: false,
                 content: 'Do you want to delete service downtimes for this host too?',
                 buttons: '[' + $cancel.val() + '][' + $no.val() + '][' + $yes.val() + ']'
-            }, function (ButtonPressed) {
-                if (ButtonPressed === $yes.val()) {
+            }, function(ButtonPressed){
+                if(ButtonPressed === $yes.val()){
                     self.WebsocketSudo.send(self.WebsocketSudo.toJson('submitDeleteHostDowntime', [$(this).attr('internal-downtime-id'), $(this).attr('downtime-services-id')]));
                     self.Externalcommand.refresh();
-                } else if (ButtonPressed === $no.val()) {
+                }else if(ButtonPressed === $no.val()){
                     self.WebsocketSudo.send(self.WebsocketSudo.toJson('submitDeleteHostDowntime', [$(this).attr('internal-downtime-id')]));
                     self.Externalcommand.refresh();
                 }
@@ -163,19 +163,19 @@ App.Controllers.DowntimesHostController = Frontend.AppController.extend({
         });
 
     },
-    fnShowHide: function (iCol, inputObject) {
+    fnShowHide: function(iCol, inputObject){
         /* Get the DataTables object again - this is not a recreation, just a get of the object */
         var oTable = this.$table.dataTable();
 
         var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
-        if (bVis == true) {
+        if(bVis == true){
             inputObject.prop('checked', false);
-        } else {
+        }else{
             inputObject.prop('checked', true);
         }
         oTable.fnSetColumnVis(iCol, bVis ? false : true);
     },
-    setDataTableFilter: function (storageValue) {
+    setDataTableFilter: function(storageValue){
         var currentURL = window.location.href;
         var postTextURL = currentURL.substring(currentURL.indexOf('downtimes/host') + 14);
         localStorage.setItem('DataTables_hostdowntimes_list_/downtimes/host' + postTextURL, storageValue);

@@ -308,7 +308,7 @@
                                 <?php foreach ($all_downtimes as $downtime): ?>
                                     <tr>
                                         <td class="text-center width-5">
-                                            <?php if ($this->Monitoring->isDowntimeRunning($downtime['Downtime']['was_started'],$downtime['Downtime']['scheduled_end_time'],$downtime['Downtime']['was_cancelled'])['value'] == "1" && $this->Acl->hasPermission('delete','downtimes') && $downtime['canDelete']): ?>
+                                            <?php if (strtotime($downtime['Downtime']['scheduled_end_time']) > time() && $downtime['Downtime']['was_cancelled'] == 0 && $this->Acl->hasPermission('delete','downtimes') && $downtime['canDelete']): ?>
                                                 <input type="checkbox" class="massChangeDT"
                                                        downtimeServicesId=""
                                                        internalDowntimeId="<?php echo h($downtime['Downtime']['internal_downtime_id']); ?>"
