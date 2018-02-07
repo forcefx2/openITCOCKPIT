@@ -877,7 +877,14 @@ $HoststatusIcon = new HoststatusIcon($Hoststatus->currentState());
                     echo $this->Form->create('nag_command', [
                         'class' => 'form-horizontal clear',
                     ]); ?>
-                    <?php echo $this->Form->input('rescheduleHost', ['options' => ['hostOnly' => __('only Host'), 'hostAndServices' => __('Host and Services')], 'label' => __('Host check for') . ':']); ?>
+                    <?php echo $this->Form->input('rescheduleHost', [
+                        'options'  => [
+                            'hostOnly'        => __('only Host'),
+                            'hostAndServices' => __('Host and Services')
+                        ],
+                        'label'    => __('Host check for') . ':',
+                        'selected' => 'hostAndServices'
+                    ]); ?>
                     <?php echo $this->Form->input('satellite_id', ['type' => 'hidden', 'value' => $host['Host']['satellite_id']]); ?>
                 </div>
 

@@ -134,7 +134,7 @@ use itnovum\openITCOCKPIT\Core\HumanTime;
                 <header>
                     <?php if ($this->Acl->hasPermission('add')): ?>
                         <div class="widget-toolbar" role="menu">
-                            <?php echo $this->Html->link(__('New'), '/'.$this->params['controller'].'/add', ['class' => 'btn btn-xs btn-success', 'icon' => 'fa fa-plus']); ?>
+                            <?php echo $this->Html->link(__('New'), '/' . $this->params['controller'] . '/add', ['class' => 'btn btn-xs btn-success', 'icon' => 'fa fa-plus']); ?>
                         </div>
                     <?php endif; ?>
                     <div class="jarviswidget-ctrls" role="menu">
@@ -155,7 +155,8 @@ use itnovum\openITCOCKPIT\Core\HumanTime;
                 </header>
                 <div>
                     <div class="widget-body no-padding">
-                        <table id="hostgroup_list" class="table table-striped table-hover table-bordered smart-form" style="">
+                        <table id="hostgroup_list" class="table table-striped table-hover table-bordered smart-form"
+                               style="">
                             <tr>
                                 <td colspan="10" class="no-padding text-right txt-color-white">
                                     <?php
@@ -166,7 +167,7 @@ use itnovum\openITCOCKPIT\Core\HumanTime;
                                         <div class="col-md-6 txt-color-blueDark">
                                             <div class="padding-5">
                                                 <strong>
-                                                    <?php echo __('Host status total').': '.sizeof($hosts); ?>
+                                                    <?php echo __('Host status total') . ': ' . sizeof($hosts); ?>
                                                 </strong>
                                                 <?php
                                                 ?>
@@ -174,11 +175,11 @@ use itnovum\openITCOCKPIT\Core\HumanTime;
                                         </div>
                                         <div class="col-md-2 btn-success">
                                             <div class="padding-5">
-                                                <label for="<?php echo $hostgroup['Hostgroup']['uuid'].'[0]'; ?>"
+                                                <label for="<?php echo $hostgroup['Hostgroup']['uuid'] . '[0]'; ?>"
                                                        class="no-padding pointer">
                                                     <input type="checkbox"
-                                                           name="<?php echo $hostgroup['Hostgroup']['uuid'].'[0]'; ?>"
-                                                           id="<?php echo $hostgroup['Hostgroup']['uuid'].'[0]'; ?>"
+                                                           name="<?php echo $hostgroup['Hostgroup']['uuid'] . '[0]'; ?>"
+                                                           id="<?php echo $hostgroup['Hostgroup']['uuid'] . '[0]'; ?>"
                                                            class="no-padding pointer state_filter" state="0"
                                                            checked="checked"
                                                            uuid="<?php echo $hostgroup['Hostgroup']['uuid']; ?>"/>
@@ -191,11 +192,11 @@ use itnovum\openITCOCKPIT\Core\HumanTime;
                                         </div>
                                         <div class="col-md-2 btn-danger">
                                             <div class="padding-5">
-                                                <label for="<?php echo $hostgroup['Hostgroup']['uuid'].'[1]'; ?>"
+                                                <label for="<?php echo $hostgroup['Hostgroup']['uuid'] . '[1]'; ?>"
                                                        class="no-padding pointer">
                                                     <input type="checkbox"
-                                                           name="<?php echo $hostgroup['Hostgroup']['uuid'].'[1]'; ?>"
-                                                           id="<?php echo $hostgroup['Hostgroup']['uuid'].'[1]'; ?>"
+                                                           name="<?php echo $hostgroup['Hostgroup']['uuid'] . '[1]'; ?>"
+                                                           id="<?php echo $hostgroup['Hostgroup']['uuid'] . '[1]'; ?>"
                                                            class="no-padding pointer state_filter" state="1"
                                                            checked="checked"
                                                            uuid="<?php echo $hostgroup['Hostgroup']['uuid']; ?>"/>
@@ -208,11 +209,11 @@ use itnovum\openITCOCKPIT\Core\HumanTime;
                                         </div>
                                         <div class="col-md-2 bg-color-blueLight">
                                             <div class="padding-5">
-                                                <label for="<?php echo $hostgroup['Hostgroup']['uuid'].'[2]'; ?>"
+                                                <label for="<?php echo $hostgroup['Hostgroup']['uuid'] . '[2]'; ?>"
                                                        class="no-padding pointer">
                                                     <input type="checkbox"
-                                                           name="<?php echo $hostgroup['Hostgroup']['uuid'].'[2]'; ?>"
-                                                           id="<?php echo $hostgroup['Hostgroup']['uuid'].'[2]'; ?>"
+                                                           name="<?php echo $hostgroup['Hostgroup']['uuid'] . '[2]'; ?>"
+                                                           id="<?php echo $hostgroup['Hostgroup']['uuid'] . '[2]'; ?>"
                                                            class="no-padding pointer state_filter" state="2"
                                                            checked="checked"
                                                            uuid="<?php echo $hostgroup['Hostgroup']['uuid']; ?>"/>
@@ -282,18 +283,18 @@ use itnovum\openITCOCKPIT\Core\HumanTime;
                                 $hoststatus = new Hoststatus($host['Hoststatus']); ?>
 
                                 <tr class="<?php echo $host['Hostgroup']['uuid']; ?> state_<?php echo $hoststatus->currentState(); ?>"
-                                    id="append_<?php echo $hostgroup['Hostgroup']['uuid'].$host['Host']['uuid']; ?>"
+                                    id="append_<?php echo $hostgroup['Hostgroup']['uuid'] . $host['Host']['uuid']; ?>"
                                     content="false" host-id="<?php echo $host['Host']['id']; ?>">
                                     <td class="width-15">
                                         <i class="showhide fa fa-plus-square-o pointer font-md"
-                                           showhide_uuid="<?php echo $host['Hostgroup']['uuid'].$host['Host']['uuid']; ?>"></i>
+                                           showhide_uuid="<?php echo $host['Hostgroup']['uuid'] . $host['Host']['uuid']; ?>"></i>
                                     </td>
                                     <td class="text-center width-40">
                                         <?php
                                         $hasHoststatus = !empty($host['Hoststatus']);
                                         $hostHref = 'javascript:void(0);';
                                         if ($this->Acl->hasPermission('browser', 'hosts')):
-                                            $hostHref = '/hosts/browser/'.$host['Host']['id'];
+                                            $hostHref = '/hosts/browser/' . $host['Host']['id'];
                                         endif;
 
                                         if ($hasHoststatus):
@@ -335,7 +336,7 @@ use itnovum\openITCOCKPIT\Core\HumanTime;
                                         <?php
                                         if ($hoststatus->isInDowntime()):?>
                                             <i class="fa fa-power-off"></i>
-                                            <?php
+                                        <?php
                                         endif;
                                         ?>
                                     </td>
@@ -417,9 +418,14 @@ use itnovum\openITCOCKPIT\Core\HumanTime;
                     echo $this->Form->create('nag_command', [
                         'class' => 'form-horizontal clear',
                     ]); ?>
-                    <?php echo $this->Form->input('rescheduleHostgroup', ['options' => ['hostOnly' => __('only Hosts'), 'hostAndServices' => __('Hosts and Services')], 'label' => __('Host check for').':']); ?>
-                </div>
-
+                    <?php echo $this->Form->input('rescheduleHostgroup', [
+                        'options'  => [
+                            'hostOnly'        => __('only Hosts'),
+                            'hostAndServices' => __('Hosts and Services')
+                        ],
+                        'label'    => __('Host check for') . ':',
+                        'selected' => 'hostAndServices'
+                    ]); ?>                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" id="submitRescheduleHostgroup" data-dismiss="modal">
@@ -462,8 +468,8 @@ use itnovum\openITCOCKPIT\Core\HumanTime;
                         3 => __('Hosts and dependent Hosts (non-triggered)'),
                     ];
                     ?>
-                    <?php echo $this->Form->input('type', ['options' => $hostdowntimetyps, 'label' => __('Maintenance period for').':']) ?>
-                    <?php echo $this->Form->input('comment', ['value' => __('In progress'), 'label' => __('Comment').':']); ?>
+                    <?php echo $this->Form->input('type', ['options' => $hostdowntimetyps, 'label' => __('Maintenance period for') . ':']) ?>
+                    <?php echo $this->Form->input('comment', ['value' => __('In progress'), 'label' => __('Comment') . ':']); ?>
 
                     <!-- from -->
                     <div class="form-group">
@@ -531,7 +537,7 @@ use itnovum\openITCOCKPIT\Core\HumanTime;
                         'class' => 'form-horizontal clear',
                     ]); ?>
                     <?php echo $this->Form->input('type', ['options' => ['hostOnly' => __('Only hosts'), 'hostAndServices' => __('Hosts including services')], 'label' => 'Acknowledge for']); ?>
-                    <?php echo $this->Form->input('comment', ['value' => __('In progress'), 'label' => __('Comment').':']); ?>
+                    <?php echo $this->Form->input('comment', ['value' => __('In progress'), 'label' => __('Comment') . ':']); ?>
                     <?php echo $this->Form->input('sticky', ['type' => 'checkbox', 'label' => __('Sticky')]); ?>
                     <?php echo $this->Form->input('author', ['type' => 'hidden', 'value' => $username]) ?>
                 </div>
